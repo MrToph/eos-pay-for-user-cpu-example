@@ -205,7 +205,7 @@ export async function transfer(
   }
 
   // CHANGES:
-  const CPU_PAYER = `cmichelkylin`;
+  const CPU_PAYER = `eosiactester`;
 
   // insert cpu payer's auth in first action to trigger ONLY_BILL_FIRST_AUTHORIZER
   txnBuilder[0].authorization.unshift({

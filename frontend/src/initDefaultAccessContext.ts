@@ -15,10 +15,10 @@ const appName = 'My Dapp';
 const walContext = initDefaultAccessContext({
 	appName,
 	network: {
-		host: 'api-kylin.eoslaomao.com',
+		host: 'jungle2.cryptolions.io',
 		port: 443,
 		protocol: 'https',
-		chainId: '5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191'
+		chainId: 'e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473'
 	},
 	walletProviders: [ scatter() ]
 	// walletProviders: [ 

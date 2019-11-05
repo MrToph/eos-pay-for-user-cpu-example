@@ -28,6 +28,10 @@ const createNetwork = (nodeEndpoint: string, chainId: string): TEOSNetwork => {
   };
 };
 
+const JungleNetwork: TEOSNetwork = createNetwork(
+  `https://jungle2.cryptolions.io:443`,
+  `e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473`,
+);
 const KylinNetwork: TEOSNetwork = createNetwork(
   `https://kylin-dsp-2.liquidapps.io:443`,
   `5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191`,
@@ -39,13 +43,15 @@ const MainNetwork: TEOSNetwork = createNetwork(
 );
 
 function getNetworkName() {
-  return `kylin`
+  return `jungle`
 }
 
 function getNetwork() {
   const eosNetwork = getNetworkName()
 
   switch (eosNetwork) {
+    case `jungle`:
+      return JungleNetwork;
     case `kylin`:
       return KylinNetwork;
     default:

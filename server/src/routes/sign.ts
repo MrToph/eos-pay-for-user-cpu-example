@@ -13,7 +13,7 @@ const buffer2hex = (buffer: Uint8Array) => Array.from(buffer, (x: number) =>
     ("00" + x.toString(16)).slice(-2)
 ).join("");
 
-const ALLOWED_ACCOUNT = `cmichelkylin`
+const ALLOWED_ACCOUNT = `eosiactester`
 const checkAction = (action: any): void => {
     switch (action.account) {
         case `eosio.token`: {
