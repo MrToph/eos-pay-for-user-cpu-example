@@ -1,3 +1,9 @@
+# server
+
+Relevant part:
+
+```typescript
+// server/src/routes/sign.ts
 
 import { Request, Response, Router, Express } from 'express';
 import { BAD_REQUEST, CREATED, OK } from 'http-status-codes';
@@ -97,3 +103,4 @@ router.post('/sign', async (req: Request, res: Response) => {
 });
 
 export default router;
+```

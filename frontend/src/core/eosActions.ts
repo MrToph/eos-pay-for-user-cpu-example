@@ -204,41 +204,33 @@ export async function transfer(
     });
   }
 
-  // CHANGES:
-  const CPU_PAYER = `eosiactester`;
-
-  // insert cpu payer's auth in first action to trigger ONLY_BILL_FIRST_AUTHORIZER
-  txnBuilder[0].authorization.unshift({
-    actor: CPU_PAYER,
-    permission: `freecpu`
-  });
   const tx = {
     actions: txnBuilder
   };
-
+  
   // this also gets serialized
   const transactionHeader = {
     blocksBehind: 3,
     expireSeconds: 60
   };
-
+  
+  // CHANGES:
   let pushTransactionArgs: PushTransactionArgs;
 
   let serverTransactionPushArgs: PushTransactionArgs | undefined;
   try {
     serverTransactionPushArgs = await serverSign(tx, transactionHeader);
   } catch (error) {
-    console.error(`Error when requesting server signature`, error.message);
+    console.error(`Error when requesting server signature: `, error.message);
   }
 
   if (serverTransactionPushArgs) {
-    console.log(`in if seversignature`, serverTransactionPushArgs.signatures);
 		// just to initialize the ABIs and other structures on api
 		// https://github.com/EOSIO/eosjs/blob/master/src/eosjs-api.ts#L214-L254
     await wallet.eosApi.transact(tx, {
+      ...transactionHeader,
       sign: false,
       broadcast: false,
-      ...transactionHeader
     });
 
 		const requiredKeys = await wallet.eosApi.signatureProvider.getAvailableKeys();
@@ -256,17 +248,14 @@ export async function transfer(
       serverTransactionPushArgs.signatures[0]
     );
   } else {
-    // no server response => remove auth from tx again
-    tx.actions[0].authorization.shift();
-
+    // no server response => sign original tx
     pushTransactionArgs = await wallet.eosApi.transact(tx, {
       ...transactionHeader,
       sign: true,
-      broadcast: false
+      broadcast: false,
     });
   }
 
-  console.log(pushTransactionArgs.signatures);
   return wallet.eosApi.pushSignedTransaction(pushTransactionArgs);
 }
 
@@ -274,11 +263,6 @@ async function serverSign(
   transaction: any,
   txHeaders: any
 ): Promise<PushTransactionArgs> {
-  function buf2hex(buffer: Uint8Array) {
-    return Array.from(buffer, (x: number) =>
-      ("00" + x.toString(16)).slice(-2)
-    ).join("");
-  }
   const rawResponse = await fetch("http://localhost:3031/api/eos/sign", {
     method: "POST",
     headers: {
@@ -288,7 +272,9 @@ async function serverSign(
     body: JSON.stringify({ tx: transaction, txHeaders })
   });
 
-	const content = await rawResponse.json();
+  const content = await rawResponse.json();
+  if(content.error) throw new Error(content.error)
+
 	const pushTransactionArgs = {
 		...content,
 		serializedTransaction: Buffer.from(content.serializedTransaction, `hex`)
