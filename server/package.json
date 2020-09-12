@@ -16,7 +16,7 @@
     "express": "^4.17.1",
     "http-status-codes": "^1.4.0",
     "module-alias": "^2.2.2",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",
